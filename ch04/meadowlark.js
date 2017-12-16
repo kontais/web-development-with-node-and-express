@@ -16,10 +16,14 @@ app.use(express.static(__dirname + '/public'));
 
 // set 'showTests' context property if the querystring contains test=1
 app.use(function(req, res, next){
-	console.log("app.get('env')=" + app.get('env'));
-	console.log("req.query.test=" + req.query.test);
+	// console.log("app.get('env')=" + app.get('env'));
+	// console.log("req.query.test=" + req.query.test);
 	res.locals.showTests = app.get('env') !== 'production' && 
 		req.query.test === '1';
+
+	var cluster = require('cluster');
+	if(cluster.isWorker) console.log('Worker %d received request', cluster.worker.id);
+
 	next();
 });
 
